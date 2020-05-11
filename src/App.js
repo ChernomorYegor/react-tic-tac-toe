@@ -5,29 +5,23 @@ import Board from "./Board";
 function App() {
     const [side, setSide] = useState('');
     const [turnNumber, setTurnNumber] = useState(0);
-    const [cellsClicked, setCellsClicked] = useState(Array(9).fill(null));
     const [winner, setWinner] = useState('');
+    const [cellsClicked, setCellsClicked] = useState(Array(9).fill(null));
 
-    function chooseSide(e) {
-        setSide(e.target.innerText);
+    function chooseSide(chosenSide) {
+        setSide(chosenSide);
     }
 
-    function cellClick(cell) {
+    function cellClick(cellIndex) {
         let cellsCurrent = cellsClicked.slice();
-        cellsCurrent[cell.target.value] = side;
+        cellsCurrent[cellIndex] = side;
         setCellsClicked(cellsCurrent);
-
-        cell.target.innerText = side;
-        cell.target.setAttribute("disabled", "disabled");
 
         isWinner(cellsCurrent);
 
         if (!isWinner(cellsCurrent)) {
             setTurnNumber(turnNumber + 1);
             setSide((side === 'X') ? 'O' : 'X');
-        } else {
-            const allCells = document.querySelectorAll('.cells button');
-            allCells.forEach(button => button.setAttribute("disabled", "disabled"));
         }
     }
 
@@ -63,7 +57,14 @@ function App() {
             {
                 (side === '')
                     ? <SideChoice chooseSide={chooseSide} />
-                    : <Board side={side} turnNumber={turnNumber} winner={winner} restart={restart} cellClick={cellClick} />
+                    : <Board
+                        side={side}
+                        turnNumber={turnNumber}
+                        winner={winner}
+                        cellsClicked={cellsClicked}
+                        restart={restart}
+                        cellClick={cellClick}
+                    />
             }
         </div>
     );
